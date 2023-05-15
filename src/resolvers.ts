@@ -28,11 +28,13 @@ const JWT_SECRET = "secret";
 export const resolvers = {
   Query: {
     // Query to retrieve all products
-    products: async () => {
-      const products = await Product.find();
+    products: async (_: unknown, { limit = 10, offset = 0 }) => {
+      const products = await Product.find()
+        .limit(limit)
+        .skip(offset);
       return products;
     },
-
+    
     // Query to retrieve all carts
     cart: async () => {
       const cart = await Cart.find().populate("user items.product");
@@ -313,7 +315,10 @@ export const resolvers = {
       if (existingUser) {
         throw new Error("User already exists");
       }
-
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(phoneNumber)) {
+        throw new Error("Phone number must be 10 digits long");
+      }
       // Hash the password using bcrypt
       const hashedPassword = await bcrypt.hash(password, 10);
 
