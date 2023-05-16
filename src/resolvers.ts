@@ -28,8 +28,9 @@ const JWT_SECRET = "secret";
 // Define resolvers
 export const resolvers = {
   Query: {
+
     // Query to retrieve all products
-    products: async (_: unknown, { limit , offset }) => {
+    products: async (_: unknown, { limit, offset }) => {
       const products = await Product.find().limit(limit).skip(offset);
       return products;
     },
@@ -151,7 +152,6 @@ export const resolvers = {
         if (!user || !user.id) {
           throw new Error("invalid user");
         }
-
         return await addToCart(productId, quantity, user.id);
       } catch (error) {
         console.error(error);
@@ -160,7 +160,7 @@ export const resolvers = {
     },
 
     // This function updates the quantity of a cart item for the user
-    updateCartItem: async (_:unknown, { cartItemId, quantity }, { user }) => {
+    updateCartItem: async (_: unknown, { cartItemId, quantity }, { user }) => {
       try {
         // Check if the user exists and has an ID
         if (!user || !user.id) {
@@ -174,39 +174,46 @@ export const resolvers = {
     },
 
     // This function removes the quantity of a cart item for the user
-    removeCartItem: async (_:unknown, { cartItemId }, { user }) => {
+    removeCartItem: async (_: unknown, { cartItemId }, { user }) => {
       console.log(cartItemId);
       try {
         // Check if the user is valid and has an ID
         if (!user || !user.id) {
           throw new Error("Invalid user");
         }
-
         return await removeCartItem(cartItemId, user.id);
       } catch (error) {
         console.error(error);
         throw new Error("Failed to remove item from cart");
       }
     },
-    createOrder: async (_:unknown, { input: { items, status } }, { user }) => {
+    // This function create createOrder for the user
+    createOrder: async (_: unknown, { input: { items, status } }, { user }) => {
       try {
+        // Call the createOrder function with the input items, status, and user
         return await createOrder(items, status, user);
       } catch (error) {
         console.error(error);
+        // If an error occurs, throw a new error with a message indicating that the order creation failed
         throw new Error("Failed to create order");
       }
     },
-    updateOrderStatus: async (_:unknown, { input: { id, status } }, { user }) => {
+    // This function updates the OrderStatus
+    updateOrderStatus: async (
+      _: unknown,
+      { input: { id, status } },
+      { user }
+    ) => {
       try {
         // Check if the user is valid and has an ID
         if (!user || !user.id) {
           throw new Error("Invalid user");
         }
-        // Return the success message
+        // If the user is valid, update the status of the order with the given ID
+        // and return the success message
         return {
           message: "Updated Successfully",
         };
-      
       } catch (error) {
         console.error(error);
         throw new Error("Failed to update order");

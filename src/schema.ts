@@ -105,7 +105,7 @@ export const typeDefs = `
     }
 
     input CreateOrderInput {
-      items: [CartItemInput!]!
+      items: CartItemInput!
     }
    
     input UpdateOrderStatusInput {

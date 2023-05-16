@@ -43,5 +43,3 @@ const CartItem = mongoose.model("CartItem", CartItemSchema);
 
 // Export the models for use in other parts of the application
 export { Cart, CartItem };
-
-

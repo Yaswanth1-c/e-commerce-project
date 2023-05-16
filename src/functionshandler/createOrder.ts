@@ -8,15 +8,20 @@ export const createOrder = async (items, status, user) => {
     }
 
     // Get the user's cart
-    const cart = await Cart.findOne({ user: user.id }).populate(
-      "items.product"
-    );
+    const cart = await Cart.findOne({ user: user.id }).populate({
+      path: "items.product",
+      model: "Product",
+    });
 
-    console.log(cart);
+    // console.log(cart);
     if (!cart) {
       throw new Error("Cart not found");
     }
-    const orderItems = cart.items.map((item) => item.id);
+    const orderItems = cart.items.map((item) => ({
+      product: item.product,
+      quantity: item.quantity,
+      price: item.price,
+    }));
     // create the new order
     const order = new Order({
       items: orderItems,
