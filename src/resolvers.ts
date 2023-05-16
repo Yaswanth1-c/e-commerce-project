@@ -29,7 +29,7 @@ const JWT_SECRET = "secret";
 export const resolvers = {
   Query: {
     // Query to retrieve all products
-    products: async (_: unknown, { limit = 10, offset = 0 }) => {
+    products: async (_: unknown, { limit , offset }) => {
       const products = await Product.find().limit(limit).skip(offset);
       return products;
     },
@@ -85,7 +85,6 @@ export const resolvers = {
       if (!context || !context.user || !context.user.admin) {
         throw new Error("Unauthorized");
       }
-
       console.log(`@@@@@@@@@@@@@@@@@@`, context.user.admin);
       // Extract product details from input
       const { name, description, price, image } = input;
@@ -161,7 +160,7 @@ export const resolvers = {
     },
 
     // This function updates the quantity of a cart item for the user
-    updateCartItem: async (_, { cartItemId, quantity }, { user }) => {
+    updateCartItem: async (_:unknown, { cartItemId, quantity }, { user }) => {
       try {
         // Check if the user exists and has an ID
         if (!user || !user.id) {
@@ -175,7 +174,7 @@ export const resolvers = {
     },
 
     // This function removes the quantity of a cart item for the user
-    removeCartItem: async (_, { cartItemId }, { user }) => {
+    removeCartItem: async (_:unknown, { cartItemId }, { user }) => {
       console.log(cartItemId);
       try {
         // Check if the user is valid and has an ID
@@ -189,7 +188,7 @@ export const resolvers = {
         throw new Error("Failed to remove item from cart");
       }
     },
-    createOrder: async (_, { input: { items, status } }, { user }) => {
+    createOrder: async (_:unknown, { input: { items, status } }, { user }) => {
       try {
         return await createOrder(items, status, user);
       } catch (error) {
@@ -197,17 +196,17 @@ export const resolvers = {
         throw new Error("Failed to create order");
       }
     },
-    updateOrderStatus: async (_, { input: { id, status } }, { user }) => {
+    updateOrderStatus: async (_:unknown, { input: { id, status } }, { user }) => {
       try {
         // Check if the user is valid and has an ID
         if (!user || !user.id) {
           throw new Error("Invalid user");
         }
-        // Return the updated order and a success message
-        // return {
+        // Return the success message
         return {
           message: "Updated Successfully",
         };
+      
       } catch (error) {
         console.error(error);
         throw new Error("Failed to update order");
@@ -221,6 +220,7 @@ export const resolvers = {
         if (!user || !user.id) {
           throw new Error("Invalid user");
         }
+        // Return the success message
         return {
           message: "Order deleted successfully",
         };
@@ -284,11 +284,11 @@ export const resolvers = {
         throw new Error("Failed to create payment intent");
       }
     },
-
-     signUp : async (_:unknown, { input }) => {
-      return await createUser(input);
-     },
     // This function handles user sign up process
+    signUp: async (_: unknown, { input }) => {
+      return await createUser(input);
+    },
+    // This function handles user sign in process
     // It takes user's name, email, and password as parameters
     // It returns an object that contains a JWT token, user ID, and a message
     signIn: async (
@@ -316,7 +316,6 @@ export const resolvers = {
       // Return an object that contains the JWT token, user ID, and a message
       return { token, id: user.id, message: "User Logged In" };
     },
-    
     signOut: async (
       _: unknown, // The parent value of this resolver function, which is not used here
       __: unknown, // The arguments passed to this function, which is not used here

@@ -17,6 +17,7 @@ export const typeDefs = `
       shippingAddress: Address!
       billingAddress: Address!
     }
+
     input UserInput {
       name: String!
       email: String!
@@ -26,6 +27,7 @@ export const typeDefs = `
       shippingAddress: AddressInput!
       billingAddress: AddressInput!
     }
+
     input AddressInput {
       street: String!
       city: String!
@@ -33,6 +35,7 @@ export const typeDefs = `
       zip: Int!
       country: String!
     }
+
     type Product {
       id: ID!
       name: String!
@@ -40,6 +43,7 @@ export const typeDefs = `
       price: Float!
       image: String!
     }
+
     type Address {
       street: String!
       city: String!
@@ -47,6 +51,7 @@ export const typeDefs = `
       zip: Int!
       country: String!
     }
+
     type Cart {
       id: ID!
       items: [CartItem]
@@ -84,16 +89,6 @@ export const typeDefs = `
       cartItemId: ID!
     }
 
-    type Query {
-      products: [Product!]!
-      getProduct(id: ID!): Product
-      cart: [Cart]
-      getCart(id: ID!):Cart
-      orders: [Order!]!
-      order(id: ID!): Order
-      userOrders(userId: ID!): [Order!]!
-    }
-    
     input ProductInput {
       name: String!
       description: String!
@@ -131,6 +126,16 @@ export const typeDefs = `
 
     type Response {
       message: String
+    }
+
+    type Query {
+      products(limit: Int, offset: Int): [Product!]!
+      getProduct(id: ID!): Product
+      cart: [Cart]
+      getCart(id: ID!):Cart
+      orders: [Order!]!
+      order(id: ID!): Order
+      userOrders(userId: ID!): [Order!]!
     }
   
     type Mutation {
